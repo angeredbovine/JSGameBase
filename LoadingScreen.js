@@ -1,4 +1,4 @@
-const CONST_LOADING_SPEED = 1;
+const CONST_LOADING_SPEED = 0.05;
 
 var m_loadState = {};
 var game_running = false;
@@ -17,12 +17,7 @@ function GameLoaded()
 	if(load_order_done && !game_running && m_loadState.nextState.Loaded() && SoundManager.Loaded())
 	{
 
-		GameLoop(-1, m_loadState.nextState);
-		game_running = true;
-
-		m_loadState = m_loadState.nextState;
-
-		ResizeCanvas();
+		LoadingScreen.transition = true;
 
 	}
 
@@ -56,13 +51,25 @@ function LoadingScreen(state)
 	this.image_master = {};
 	this.sheet_master = {};
 
+	this.loaded = false;
+
 }
+
+LoadingScreen.transition = false;
 
 LoadingScreen.prototype = Object.create(State.prototype);
 LoadingScreen.prototype.constructor = LoadingScreen;
 
 LoadingScreen.prototype.Loaded = function()
 {
+
+	//Short Circuit full load checking to avoid multiple calls to Start
+	if(this.loaded)
+	{
+
+		return true;
+
+	}
 
 	for(var loaded in this.loadOrder)
 	{
@@ -80,12 +87,16 @@ LoadingScreen.prototype.Loaded = function()
 
 	this.Start();
 
+	this.loaded = true;
+
 	return true;
 
 }
 
 LoadingScreen.prototype.Initialize = function(json)
 {
+
+	LoadingScreen.transition = false;
 
 	State.prototype.Initialize.call(this);
 
@@ -108,10 +119,11 @@ LoadingScreen.prototype.Load = function(json)
 LoadingScreen.prototype.Start = function()
 {
 
-	for(var i = 0; i < json.sheet_references.length; i++)
+	for(var i = 0; i < this.sheet_references.length; i++)
 	{
 
-		this..sheet_references.reference = new SheetReference(this.sheet_master[this.sheet_references[i].reference]);
+		this.sheet_references[i].reference = new SheetReference(this.sheet_master[this.sheet_references[i].reference]);
+		this.sheet_references[i].reference.Promise(this.sheet_references[i].frame, CONST_SPRITESHEET_EMPTY, true);
 
 	}
 
@@ -120,7 +132,7 @@ LoadingScreen.prototype.Start = function()
 LoadingScreen.prototype.Update = function(delta)
 {
 
-	if(this.Loaded() && load_order_done && !this.nextState.Loaded())
+	if(this.Loaded() && load_order_done)
 	{
 
 		var progress = this.nextState.LoadProgress();
@@ -128,9 +140,8 @@ LoadingScreen.prototype.Update = function(delta)
 		if(progress.total > 0)
 		{
 
-			this.last_progress = this.progress;
 			this.progress = (progress.loaded / progress.total);
-			
+
 		}
 
 		if(this.last_progress != this.progress)
@@ -148,8 +159,19 @@ LoadingScreen.prototype.Update = function(delta)
 
 		}
 
+	}
 
-	}	
+	if(LoadingScreen.transition && this.last_progress >= 1)
+	{
+
+		GameLoop(-1, m_loadState.nextState);
+		game_running = true;
+
+		m_loadState = m_loadState.nextState;
+
+		ResizeCanvas();
+
+	}
 
 }
 
@@ -187,7 +209,7 @@ LoadingScreen.prototype.Render = function(delta)
 
 			}
 
-			context.drawImage(image.Image(), data.box.X(), data.box.Y(), data.box.Width(), data.box.Height(), reference.x - this.reference.scale.y * reference.offset.x, treference.y - reference.scale.y * reference.offset.y, reference.scale.x * data.box.Width(), reference.scale.y * data.box.Height());
+			this.context.drawImage(image.Image(), data.box.X(), data.box.Y(), data.box.Width(), data.box.Height(), reference.x - reference.scale.y * reference.offset.x, reference.y - reference.scale.y * reference.offset.y, reference.scale.x * data.box.Width(), reference.scale.y * data.box.Height());
 
 		}
 

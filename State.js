@@ -10,6 +10,8 @@ function State()
 	this.container = null;
 	this.context = null;
 
+	this.loaded = false;
+
 }
 
 State.prototype.Running = function(r)
@@ -30,6 +32,14 @@ State.prototype.Running = function(r)
 
 State.prototype.Loaded = function()
 {
+
+	//Short Circuit full load checking to avoid multiple calls to Start
+	if(this.loaded)
+	{
+
+		return true;
+
+	}
 
 	this.loaded_count = 0;
 	for(var loaded in this.loadOrder)
@@ -56,6 +66,8 @@ State.prototype.Loaded = function()
 	this.loadOrder = {};
 
 	this.Start();
+
+	this.loaded = true;
 
 	return true;
 
