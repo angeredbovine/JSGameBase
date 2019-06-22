@@ -10,7 +10,7 @@ function Logger()
 Logger.Log = function(text, css)
 {
 
-	console.log("%c - " + CONST_GAME_NAME + " " + text, css);
+	console.log("%c - " + CONST_APP_NAME + " " + text, css);
 
 }
 
