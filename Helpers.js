@@ -6,6 +6,11 @@ const CONST_TERM_MULTIPLICATION_SYMBOL = "*";
 const CONST_PIECEWISE_DELIMITER = "=";
 const CONST_RANDOM_DELIMITER = "=";
 
+function Helpers()
+{
+
+}
+
 Helpers.function_array = [];
 
 Helpers.function_array[0] = {};
@@ -15,11 +20,6 @@ Helpers.function_array[0].func = Math.sin;
 Helpers.function_array[1] = {};
 Helpers.function_array[1].code = "cos";
 Helpers.function_array[1].func = Math.cos;
-
-function Helpers()
-{
-
-}
 
 Helpers.TrimLocator = function(locator)
 {
