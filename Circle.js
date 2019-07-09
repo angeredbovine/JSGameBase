@@ -84,7 +84,7 @@ Circle.prototype.Render = function(context, color, width, borderColor)
 
 	context.beginPath();
 
-	context.arc(this.X(), this.Y(), this.Radius(), 0, 2 * Math.PI, false);
+	context.arc(Math.floor(this.X()), Math.floor(this.Y()), Math.floor(this.Radius()), 0, 2 * Math.PI, false);
 	context.fillStyle = color;
 
 	context.fill();

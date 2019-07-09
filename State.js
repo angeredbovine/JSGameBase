@@ -93,7 +93,7 @@ State.prototype.Initialize = function(json)
 
 	this.canvas = document.getElementById(CONST_CANVAS_ID);
 	this.container = document.getElementById(CONST_CONTAINER_ID);
-	this.context = this.canvas.getContext('2d');
+	this.context = this.canvas.getContext('2d', { alpha: false });
 
 }
 

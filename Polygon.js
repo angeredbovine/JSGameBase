@@ -311,12 +311,12 @@ Polygon.prototype.Render = function(context, fillColor, width, borderColor)
 
 	context.beginPath();
 
-	context.moveTo(vector.X(), vector.Y());
+	context.moveTo(Math.floor(vector.X()), Math.floor(vector.Y()));
 	for(var i = 0; i < this.vertices.length; i++)
 	{
 
 		vector = Vector2.Sum(this.Position(), this.vertices[i]);
-		context.lineTo(vector.X(), vector.Y());
+		context.lineTo(Math.floor(vector.X()), Math.floor(vector.Y()));
 
 	}
 	context.closePath();
@@ -328,7 +328,7 @@ Polygon.prototype.Render = function(context, fillColor, width, borderColor)
 	{
 
 		context.lineWidth = width;
-        context.strokeStyle = borderColor;
+        	context.strokeStyle = borderColor;
 		context.stroke();
 
 	}

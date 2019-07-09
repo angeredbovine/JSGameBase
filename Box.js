@@ -251,15 +251,15 @@ Box.prototype.Render = function(context, fillColor, width, borderColor)
 {
 
 	context.beginPath();
-    context.rect(this.X(), this.Y(), this.Width(), this.Height());
+    	context.rect(Math.floor(this.X()), Math.floor(this.Y()), Math.floor(this.Width()), Math.floor(this.Height()));
 	context.fillStyle = fillColor;
 	context.fill();
 
 	if(typeof width && typeof borderColor)
 	{
 
-        context.lineWidth = width;
-        context.strokeStyle = borderColor;
+        	context.lineWidth = width;
+        	context.strokeStyle = borderColor;
 		context.stroke();
 
 	}

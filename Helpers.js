@@ -21,6 +21,13 @@ Helpers.function_array[1] = {};
 Helpers.function_array[1].code = "cos";
 Helpers.function_array[1].func = Math.cos;
 
+Helpers.DrawImage = function(context, image, sx, sy, sw, sh, dx, dy, dw, dh)
+{
+
+	context.drawImage(image, Math.floor(sx), Math.floor(sy), Math.floor(sw), Math.floor(sh), Math.floor(dx), Math.floor(dy), Math.floor(dw), Math.floor(dh));
+
+}
+
 Helpers.TrimLocator = function(locator)
 {
 
