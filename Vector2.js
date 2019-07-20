@@ -79,3 +79,15 @@ Vector2.prototype.Rotate = function()
 	//TODO
 
 }
+
+Vector2.prototype.ToJSON = function()
+{
+
+	var json = {};
+
+	json.x = this.X();
+	json.y = this.Y();
+
+	return json;
+
+}

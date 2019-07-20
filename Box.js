@@ -265,3 +265,17 @@ Box.prototype.Render = function(context, fillColor, width, borderColor)
 	}
 
 }
+
+Box.prototype.ToJSON = function()
+{
+
+	var json = {};
+
+	json.x = this.X();
+	json.y = this.Y();
+	json.width = this.Width();
+	json.height = this.Height();
+
+	return json;
+
+}

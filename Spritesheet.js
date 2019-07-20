@@ -24,6 +24,18 @@ FrameData.prototype.Data = function()
 
 }
 
+FrameData.prototype.ToJSON = function()
+{
+
+	var json = {};
+
+	json.box = this.box.ToJSON();
+	json.offset = this.offset.ToJSON();
+
+	return json;
+
+}
+
 function Spritesheet()
 {
 
@@ -52,6 +64,26 @@ Spritesheet.prototype.Populate = function(json, proceed)
 	this.animations = json.animations.slice(0);
 
 	this.FinishPopulation(proceed);
+
+}
+
+Spritesheet.prototype.ToJSON = function()
+{
+
+	var json = {};
+
+	json.frames = [];
+
+	for(var i = 0; i < this.frames.length; i++)
+	{
+
+		json.frames[i] = this.frames[i].ToJSON();
+
+	}
+
+	json.animations = this.animations.slice(0);
+
+	return json;
 
 }
 
