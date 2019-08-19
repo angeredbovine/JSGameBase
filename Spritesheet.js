@@ -24,13 +24,13 @@ FrameData.prototype.Data = function()
 
 }
 
-FrameData.prototype.ToJSON = function()
+FrameData.prototype.ToJSON = function(shift)
 {
 
 	var json = {};
 
-	json.box = this.box.ToJSON();
-	json.offset = this.offset.ToJSON();
+	json.box = this.box.ToJSON(shift);
+	json.offset = Vector2.Sum(this.offset, shift).ToJSON();
 
 	return json;
 
@@ -67,8 +67,15 @@ Spritesheet.prototype.Populate = function(json, proceed)
 
 }
 
-Spritesheet.prototype.ToJSON = function()
+Spritesheet.prototype.ToJSON = function(shift)
 {
+
+	if(shift === undefined)
+	{
+
+		shift = new Vector2();
+
+	}
 
 	var json = {};
 
@@ -77,7 +84,7 @@ Spritesheet.prototype.ToJSON = function()
 	for(var i = 0; i < this.frames.length; i++)
 	{
 
-		json.frames[i] = this.frames[i].ToJSON();
+		json.frames[i] = this.frames[i].ToJSON(shift);
 
 	}
 

@@ -266,13 +266,20 @@ Box.prototype.Render = function(context, fillColor, width, borderColor)
 
 }
 
-Box.prototype.ToJSON = function()
+Box.prototype.ToJSON = function(shift)
 {
+
+	if(shift === undefined)
+	{
+
+		shift = new Vector2();
+
+	}
 
 	var json = {};
 
-	json.x = this.X();
-	json.y = this.Y();
+	json.x = this.X() + shift.X();
+	json.y = this.Y() + shift.Y();
 	json.width = this.Width();
 	json.height = this.Height();
 
