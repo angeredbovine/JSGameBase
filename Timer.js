@@ -1,59 +1,104 @@
-var m_start = 0;
-var m_pause = 0;
-
 function Timer()
 {
 
+	this.start = 0;
+	this.pause = 0;
+	this.running = 0;
+
 }
 
-Timer.Time = function()
+var m_globalTimer = new Timer();
+
+Timer.prototype.Time = function()
 {
 
 	return Date.now();
 
 }
 
+Timer.Time = function()
+{
+
+	return m_globalTimer.Time();
+
+}
+
+Timer.prototype.Reset = function()
+{
+
+	this.start = Date.now();
+	this.running = this.start;
+	this.pause = 0;
+
+}
+
 Timer.Reset = function()
 {
 
-	m_start = Date.now();
-	m_running = m_start;
-	m_pause = 0;
+	m_globalTimer.Reset();
+
+}
+
+Timer.prototype.LifetimeMilliseconds = function()
+{
+
+	return Timer.Time() - this.start;
 
 }
 
 Timer.LifetimeMilliseconds = function()
 {
 
-	return Timer.Time() - m_start;
+	return m_globalTimer.LifetimeMilliseconds();
+
+}
+
+Timer.prototype.RunningMilliseconds = function()
+{
+
+	if(this.pause > 0)
+	{
+
+		return this.pause - this.running;
+
+	}
+
+	return Timer.Time() - this.running;
 
 }
 
 Timer.RunningMilliseconds = function()
 {
 
-	if(m_pause > 0)
-	{
+	return m_globalTimer.RunningMilliseconds();
 
-		return m_pause - m_running;
+}
 
-	}
+Timer.prototype.Pause = function()
+{
 
-	return Timer.Time() - m_running;
+	this.pause = Timer.Time();
 
 }
 
 Timer.Pause = function()
 {
 
-	this.pauseTime = Timer.Time();
+	m_globalTimer.Pause();
+
+}
+
+Timer.prototype.Unpause = function()
+{
+
+	this.running = Timer.Time() - Timer.RunningMilliseconds();
+	this.pause = 0;
 
 }
 
 Timer.Unpause = function()
 {
 
-	m_running = Timer.Time() - Timer.RunningMilliseconds();
-	m_pause = 0;
+	m_globalTimer.Unpause();
 
 }
