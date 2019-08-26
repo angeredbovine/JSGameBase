@@ -31,6 +31,7 @@ FrameData.prototype.ToJSON = function(shift)
 
 	json.box = this.box.ToJSON(shift);
 	json.offset = Vector2.Sum(this.offset, shift).ToJSON();
+	json.duration = this.duration;
 
 	return json;
 
