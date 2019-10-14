@@ -33,6 +33,34 @@ DB.Prepare = function()
 
 }
 
+DB.LoadSettings = function()
+{
+
+	ipc.on(channels.SettingsReceiveChannel, function(event, args)
+	{
+
+		if(args.error)
+		{
+
+			Logger.LogError("Error reading user settings: " + args.error);
+
+		}
+
+		DB.resources[SETTINGS_KEY](args.json);
+		delete DB.resources[SETTINGS_KEY];
+
+	});
+
+	DB.resources[SETTINGS_KEY] = Settings.Populate;
+
+	ipc.send(channels.SettingsSendChannel, "Load");
+
+}			
+
+DB.SaveSettings = function()
+{
+}
+
 DB.LoadImage = function(locator, caller)
 {
 
