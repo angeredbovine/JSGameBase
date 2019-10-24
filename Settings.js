@@ -1,11 +1,11 @@
-var m_settingsData = {};
-
-const CONST_REQUIRED_SETTINGS = [{"name": "music_volume", "default": 1}, {"name": "sound_volume", "default": 1}];
+const CONST_REQUIRED_SETTINGS = [{"name": "music_volume", "default": 1, "setter": SoundManager.SetMusicVolume}, {"name": "sound_volume", "default": 1, "setter": SoundManager.SetSoundVolume}];
 
 function Settings()
 {
 
 }
+
+Settings.m_settingsData = {};
 
 Settings.Load = function()
 {
@@ -17,7 +17,7 @@ Settings.Load = function()
 Settings.Populate = function(json)
 {
 
-	m_settingsData = json;
+	Settings.m_settingsData = (json ? json : {});
 
 	Settings.Ensure();
 
@@ -29,13 +29,15 @@ Settings.Ensure = function()
 	for(var i = 0; i < CONST_REQUIRED_SETTINGS.length; i++)
 	{
 
-		if(!m_settingsData.hasOwnProperty(CONST_REQUIRED_SETTINGS[i].name))
+		if(!Settings.m_settingsData.hasOwnProperty(CONST_REQUIRED_SETTINGS[i].name))
 		{
 
 			var pair = CONST_REQUIRED_SETTINGS[i];
-			m_settingsData[pair.name] = pair.default;
+			Settings.m_settingsData[pair.name] = pair.default;
 
 		}
+
+		CONST_REQUIRED_SETTINGS[i].setter(Settings.m_settingsData[CONST_REQUIRED_SETTINGS[i].name]);
 
 	}
 
@@ -44,20 +46,34 @@ Settings.Ensure = function()
 Settings.Access = function(key)
 {
 
-	return m_settingsData[key];
+	return Settings.m_settingsData[key];
 
 }
 
 Settings.Change = function(key, value)
 {
 
-	m_settingsData[key] = value;
+	Settings.m_settingsData[key] = value;
+
+	for(var i = 0; i < CONST_REQUIRED_SETTINGS.length; i++)
+	{
+
+		if(Settings.m_settingsData.hasOwnProperty(CONST_REQUIRED_SETTINGS[i].name))
+		{
+
+			CONST_REQUIRED_SETTINGS[i].setter(value);
+
+			return;
+
+		}
+
+	}
 
 }
 
 Settings.Full = function()
 {
 
-	return m_settingsData;
+	return Settings.m_settingsData;
 
 }

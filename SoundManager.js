@@ -59,12 +59,16 @@ SoundEffect.prototype.Loaded = function()
 
 }
 
-SoundEffect.prototype.Play = function(callback)
+SoundEffect.prototype.Play = function(callback, music)
 {
 
     var source = SoundManager.context.createBufferSource();
     source.buffer = this.buffer;
-    source.connect(SoundManager.context.destination);
+
+    var volume = (music ? SoundManager.music_volume : SoundManager.sound_volume);
+
+    source.connect(volume);
+    volume.connect(SoundManager.context.destination);
 
     source.start(0);
 
@@ -75,6 +79,14 @@ SoundEffect.prototype.Play = function(callback)
 function SoundManager()
 {
 }
+
+SoundManager.audio_context = null;
+SoundManager.context = null;
+SoundManager.buffers = null;
+
+SoundManager.sound_volume = null;
+SoundManager.music_volume = null;
+
 
 SoundManager.Initialize = function()
 {
@@ -93,6 +105,9 @@ SoundManager.Initialize = function()
     SoundManager.context = new AudioContext();
 
     SoundManager.buffers = {};
+
+    SoundManager.sound_volume = SoundManager.context.createGain();
+    SoundManager.music_volume = SoundManager.context.createGain();
 
 }
 
@@ -153,7 +168,7 @@ SoundManager.ProcessSoundMessages = function()
 
         var sound = message.Sound();
 
-        SoundManager.PlaySound(sound);
+        SoundManager.PlaySound(sound, null, false);
 
         message = Messenger.ReadMessage(CONST_MESSAGE_TYPE_SOUNDEFFECT, true, 0);
 
@@ -179,7 +194,21 @@ SoundManager.ProcessSoundMessages = function()
 
 }
 
-SoundManager.PlaySound = function(sound, callback)
+SoundManager.SetSoundVolume = function(volume)
+{
+
+    SoundManager.sound_volume.gain.value = volume;
+
+}
+
+SoundManager.SetMusicVolume = function(volume)
+{
+
+    SoundManager.music_volume.gain.value = volume;
+
+}
+
+SoundManager.PlaySound = function(sound, callback, music)
 {
 
     if(!(sound in SoundManager.buffers))
@@ -191,7 +220,7 @@ SoundManager.PlaySound = function(sound, callback)
 
     }
 
-    SoundManager.buffers[sound].Play(callback);
+    SoundManager.buffers[sound].Play(callback, music);
 
 }
 
@@ -266,7 +295,7 @@ LinearMusicMessage.prototype.InitializeMusic = function()
 LinearMusicMessage.prototype.PlayTrack = function()
 {
 
-    SoundManager.PlaySound(this.tracks[this.currentTrack], this.TrackComplete.bind(this));
+    SoundManager.PlaySound(this.tracks[this.currentTrack], this.TrackComplete.bind(this), true);
     this.playing = true;
 
 }

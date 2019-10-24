@@ -1,2 +1,3 @@
 ../SpaceShooter/JS/Base/
 ../Tools/Pages/JS/Base/
+../Strategy/JS/Base/
